@@ -5,8 +5,12 @@ Create a logical model for a small bookstore. 📚
 
 At the minimum it should have employee, order, sales, customer, and book entities (tables). Determine sensible column and table design based on what you know about these concepts. Keep it simple, but work out sensible relationships to keep tables reasonably sized. Include a date table. There are several tools online you can use, I'd recommend [_Draw.io_](https://www.drawio.com/) or [_LucidChart_](https://www.lucidchart.com/pages/).
 
+![alt text](<logical diagram1.drawio-1.png>)
+
 ## Question 2
 We want to create employee shifts, splitting up the day into morning and evening. Add this to the ERD.
+
+![alt text](<logical design2.drawio.png>)
 
 ## Question 3
 The store wants to keep customer addresses. Propose two architectures for the CUSTOMER_ADDRESS table, one that will retain changes, and another that will overwrite. Which is type 1, which is type 2?
@@ -15,16 +19,54 @@ _Hint, search type 1 vs type 2 slowly changing dimensions._
 
 Bonus: Are there privacy implications to this, why or why not?
 ```
-Your answer...
-```
+Answer:
+As mentioned above, to update the CUSTOMER_ADDRESS table there are 2 ways, Type 1 - overwrite architecture and Type2 - retain changes architecture
+
+Type 1 - overwrite architecture
+
+Only latest address will be stored.
+
+CREATE TABLE CUSTOMER_ADDRESS (
+  customer_id INT PRIMARY KEY,
+  address VARCHAR(255),
+  city VARCHAR(100),
+  state VARCHAR(100),
+  zip_code VARCHAR(100),
+  country VARCHAR(100),
+  last_updated_date DATE
+)
+
+Type2 - retain changes architecture
+when address changes, a new record will be inserted each time with latest address.
+
+CREATE TABLE CUSTOMER_ADDRESS (
+  customer_address_id INT PRIMARY KEY AUTO_INCREMENT,
+  customer_id INT,
+  address VARCHAR(255),
+  city VARCHAR(100),
+  state VARCHAR(100),
+  zip_code VARCHAR(100),
+  country VARCHAR(100),
+  start_date DATE,
+  end_date DATE
+)
 
 ## Question 4
 Review the AdventureWorks Schema [here](https://i.stack.imgur.com/LMu4W.gif)
 
 Highlight at least two differences between it and your ERD. Would you change anything in yours?
 ```
-Your answer...
-```
+Answer:
+The 2 difference which i found between imy ERD and AdventureWorks Schema is Normalization and Handling of tables.
+
+In AdventureWorks Schema, the tables are highly normalized. It contain multiple sub tables to handle each senario/use case. Where in my Bookstore ERD doesnt have many subtable which makes it simple but less flexible.
+
+In AdventureWorks Schema there are many tables to handle each senario. But in Bookstore ERD there is only very less table. For example, 'inventory'. The invenroty table will help to track the inventory deatils, stock levels etc, which is currently handling within 'Book' table
+
+Changes:
+I would like to add more tables such as 'inventory' to handle the data and to make the schema more flexible to use.
+
+
 
 # Criteria
 
